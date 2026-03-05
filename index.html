@@ -15,11 +15,17 @@
     button {
       padding: 10px 20px;
       margin-top: 10px;
+      cursor: pointer;
     }
     .result {
       margin-top: 20px;
       padding: 15px;
       background: #f3f3f3;
+    }
+    .score {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -27,17 +33,36 @@
 
 <h1>Simulation สัมภาษณ์งาน</h1>
 
-<p><b>คำถาม:</b> แนะนำตัวเองสั้น ๆ ภายใน 1 นาที</p>
+<p><b>คำถาม:</b> <span id="question"></span></p>
 
-<textarea id="answer"></textarea>
+<textarea id="answer" placeholder="พิมพ์คำตอบของคุณที่นี่..."></textarea>
 <br>
 <button onclick="evaluate()">ส่งคำตอบ</button>
+<button onclick="newQuestion()">สุ่มคำถามใหม่</button>
 
 <div class="result" id="result"></div>
 
 <script>
+const questions = [
+  "แนะนำตัวเองสั้น ๆ ภายใน 1 นาที",
+  "จุดแข็งของคุณคืออะไร?",
+  "จุดอ่อนของคุณคืออะไร?",
+  "ทำไมเราควรรับคุณเข้าทำงาน?",
+  "เล่าความสำเร็จที่คุณภูมิใจที่สุด",
+  "คุณจัดการกับความกดดันอย่างไร?",
+  "อีก 5 ปีข้างหน้า คุณอยากอยู่จุดไหน?",
+  "คุณเคยล้มเหลวไหม แล้วเรียนรู้อะไรจากมัน?"
+];
+
+function newQuestion() {
+  const randomIndex = Math.floor(Math.random() * questions.length);
+  document.getElementById("question").innerText = questions[randomIndex];
+  document.getElementById("answer").value = "";
+  document.getElementById("result").innerHTML = "";
+}
+
 function evaluate() {
-  const answer = document.getElementById("answer").value;
+  const answer = document.getElementById("answer").value.trim();
 
   if (answer.length < 20) {
     document.getElementById("result").innerHTML =
@@ -45,9 +70,20 @@ function evaluate() {
     return;
   }
 
+  let score = 5;
+
+  if (answer.length > 50) score += 2;
+  if (answer.includes("ตัวอย่าง") || answer.includes("ประสบการณ์")) score += 1;
+  if (answer.length > 120) score += 2;
+
+  if (score > 10) score = 10;
+
   document.getElementById("result").innerHTML =
-    "✅ ดีมาก! โครงสร้างคำตอบชัดเจน แต่ควรเพิ่มตัวอย่างผลงานจริงเพื่อให้ดูน่าเชื่อถือขึ้น";
+    "<div class='score'>คะแนน: " + score + "/10</div>" +
+    "<br>คำแนะนำ: ลองเพิ่มตัวอย่างจริง และโครงสร้างให้ชัดเจน จะทำให้คำตอบดูมืออาชีพขึ้น";
 }
+
+newQuestion();
 </script>
 
 </body>
