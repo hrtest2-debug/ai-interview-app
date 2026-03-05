@@ -3,155 +3,177 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Interview Cute 🌷</title>
+<title>AI Interview Assessment</title>
 
 <style>
+:root {
+  --primary: #2563eb;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #1e293b;
+  --border: #e2e8f0;
+}
+
 body {
-  font-family: "Segoe UI", sans-serif;
-  background: linear-gradient(135deg, #fceff9, #e0f7fa);
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  margin: 0;
 }
 
-.container {
-  background: white;
-  width: 420px;
-  padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  text-align: center;
+.card {
+  width: 520px;
+  background: var(--card);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
 h1 {
-  color: #ff7eb3;
-  margin-bottom: 10px;
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  color: var(--text);
 }
 
-#question {
-  background: #fff4fb;
+.question-box {
+  background: #f1f5f9;
   padding: 15px;
-  border-radius: 15px;
+  border-radius: 10px;
   margin-bottom: 15px;
-  font-weight: bold;
-  color: #444;
+  font-weight: 500;
 }
 
 textarea {
   width: 100%;
-  height: 100px;
-  border-radius: 15px;
-  border: 2px solid #ffd6ec;
-  padding: 10px;
+  height: 120px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
   font-size: 14px;
   resize: none;
   outline: none;
-  background: #fdfaff;
 }
 
 textarea:focus {
-  border-color: #ff9ac9;
+  border-color: var(--primary);
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
 }
 
 button {
-  margin-top: 10px;
   padding: 10px 18px;
+  border-radius: 8px;
   border: none;
-  border-radius: 20px;
-  font-size: 14px;
   cursor: pointer;
+  font-weight: 500;
   transition: 0.2s;
 }
 
-.btn-random {
-  background: #b5ead7;
+.btn-secondary {
+  background: #e2e8f0;
 }
 
-.btn-random:hover {
-  background: #9de0c5;
+.btn-secondary:hover {
+  background: #cbd5e1;
 }
 
-.btn-submit {
-  background: #ffdac1;
+.btn-primary {
+  background: var(--primary);
+  color: white;
 }
 
-.btn-submit:hover {
-  background: #ffc4a3;
+.btn-primary:hover {
+  opacity: 0.9;
 }
 
-#result {
-  margin-top: 15px;
-  font-weight: bold;
-  color: #555;
+.result {
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #f8fafc;
+  font-size: 14px;
 }
 
-.score-box {
+.score {
   font-size: 18px;
-  color: #ff6f91;
-  margin-bottom: 5px;
+  font-weight: bold;
+  color: var(--primary);
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-  <h1>🌷 AI Interview 🌷</h1>
+<div class="card">
+  <h1>AI Interview Assessment</h1>
 
-  <div id="question"></div>
+  <div class="question-box" id="question"></div>
 
-  <textarea id="answer" placeholder="พิมพ์คำตอบของคุณที่นี่... ✨"></textarea>
+  <textarea id="answer" placeholder="พิมพ์คำตอบของคุณที่นี่..."></textarea>
 
-  <br>
-  <button class="btn-random" onclick="newQuestion()">🎀 สุ่มคำถาม</button>
-  <button class="btn-submit" onclick="evaluate()">💌 ส่งคำตอบ</button>
+  <div class="actions">
+    <button class="btn-secondary" id="newBtn">สุ่มคำถาม</button>
+    <button class="btn-primary" id="submitBtn">ประเมินคำตอบ</button>
+  </div>
 
-  <div id="result"></div>
+  <div class="result" id="result"></div>
 </div>
 
 <script>
+document.addEventListener("DOMContentLoaded", function () {
 
-const questions = [
-  "เล่าเกี่ยวกับตัวคุณ",
-  "ทำไมคุณถึงอยากทำงานที่นี่",
-  "จุดแข็งของคุณคืออะไร",
-  "คุณเคยเจอปัญหาใหญ่และแก้ยังไง",
-  "อีก 5 ปีคุณอยากเห็นตัวเองเป็นแบบไหน"
-];
+  const questions = [
+    "เล่าเกี่ยวกับตัวคุณ",
+    "ทำไมคุณถึงอยากทำงานที่นี่",
+    "จุดแข็งของคุณคืออะไร",
+    "คุณจัดการกับความกดดันอย่างไร",
+    "อีก 5 ปีคุณอยากเติบโตไปในทิศทางไหน"
+  ];
 
-function newQuestion() {
-  const randomIndex = Math.floor(Math.random() * questions.length);
-  document.getElementById("question").innerText = questions[randomIndex];
-  document.getElementById("answer").value = "";
-  document.getElementById("result").innerHTML = "";
-}
+  const questionEl = document.getElementById("question");
+  const answerEl = document.getElementById("answer");
+  const resultEl = document.getElementById("result");
 
-function evaluate() {
-  const answer = document.getElementById("answer").value.trim();
-
-  if (answer.length < 20) {
-    document.getElementById("result").innerHTML =
-      "⚠️ คำตอบสั้นไปหน่อย ลองอธิบายเพิ่มอีกนิดนะคะ 💕";
-    return;
+  function newQuestion() {
+    const randomIndex = Math.floor(Math.random() * questions.length);
+    questionEl.textContent = questions[randomIndex];
+    answerEl.value = "";
+    resultEl.innerHTML = "";
   }
 
-  let score = 5;
+  function evaluate() {
+    const answer = answerEl.value.trim();
 
-  if (answer.length > 50) score += 2;
-  if (answer.length > 120) score += 2;
-  if (answer.includes("ความตั้งใจ") || answer.includes("พัฒนา")) score += 1;
+    if (answer.length < 20) {
+      resultEl.innerHTML = "คำตอบสั้นเกินไป กรุณาอธิบายเพิ่มเติม";
+      return;
+    }
 
-  if (score > 10) score = 10;
+    let score = 5;
 
-  document.getElementById("result").innerHTML =
-    "<div class='score-box'>🌟 คะแนน: " + score + " /10</div>" +
-    "✨ ทำได้ดีมาก ลองเพิ่มตัวอย่างจริงจะยิ่งน่าประทับใจ 💖";
-}
+    if (answer.length > 60) score += 2;
+    if (answer.length > 120) score += 2;
+    if (answer.includes("พัฒนา") || answer.includes("เรียนรู้")) score += 1;
 
-newQuestion();
+    if (score > 10) score = 10;
 
+    resultEl.innerHTML =
+      "<div class='score'>คะแนน: " + score + " / 10</div>" +
+      "<div>คำแนะนำ: เพิ่มตัวอย่างประสบการณ์จริงจะทำให้คำตอบแข็งแรงขึ้น</div>";
+  }
+
+  document.getElementById("newBtn").addEventListener("click", newQuestion);
+  document.getElementById("submitBtn").addEventListener("click", evaluate);
+
+  newQuestion();
+});
 </script>
 
 </body>
