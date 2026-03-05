@@ -53,7 +53,15 @@ const questions = [
   "อีก 5 ปีข้างหน้า คุณอยากอยู่จุดไหน?",
   "คุณเคยล้มเหลวไหม แล้วเรียนรู้อะไรจากมัน?"
 ];
+<script>
 
+const questions = [
+  "เล่าเกี่ยวกับตัวคุณ",
+  "ทำไมถึงอยากทำงานที่นี่",
+  "จุดแข็งของคุณคืออะไร",
+  "เคยเจอปัญหาใหญ่แล้วแก้ยังไง",
+  "อีก 5 ปีอยากเป็นอะไร"
+];
 function newQuestion() {
   const randomIndex = Math.floor(Math.random() * questions.length);
   document.getElementById("question").innerText = questions[randomIndex];
