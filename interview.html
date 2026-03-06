@@ -1,90 +1,97 @@
 <!DOCTYPE html>
-<html lang="th">
+<html>
 <head>
+
 <meta charset="UTF-8">
 <title>AI Interview</title>
 
 <style>
+
 body{
-font-family: Arial;
-background:#f5f7fb;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
+font-family:Poppins;
+background:#0f172a;
+color:white;
+text-align:center;
+padding:40px;
 }
 
-.box{
-background:white;
+.card{
+background:#1e293b;
 padding:40px;
-border-radius:10px;
-width:600px;
-box-shadow:0 10px 30px rgba(0,0,0,0.1);
+border-radius:15px;
+max-width:700px;
+margin:auto;
 }
 
 textarea{
 width:100%;
 height:120px;
-margin-top:10px;
+margin-top:20px;
+border-radius:8px;
+border:none;
 padding:10px;
 }
 
 button{
-margin-top:15px;
-padding:10px 20px;
-background:#4f46e5;
-color:white;
+margin-top:20px;
+padding:12px 30px;
 border:none;
-border-radius:6px;
+border-radius:8px;
+background:#3b82f6;
+color:white;
+font-size:16px;
 cursor:pointer;
 }
 
-.result{
+.score{
 margin-top:20px;
-font-size:18px;
+font-size:22px;
+color:#60a5fa;
 }
+
 </style>
+
 </head>
 
 <body>
 
-<div class="box">
+<div class="card">
 
-<h2>Simulation สัมภาษณ์งาน</h2>
-
-<p id="question">
-ทำไมเราควรรับคุณเข้าทำงาน
-</p>
+<h2 id="question">
+Tell me about yourself
+</h2>
 
 <textarea id="answer"></textarea>
 
 <br>
 
-<button onclick="send()">ส่งคำตอบ</button>
+<button onclick="sendAnswer()">
+Submit Answer
+</button>
 
-<div class="result" id="result"></div>
+<div id="result" class="score"></div>
 
 </div>
 
 <script>
 
-async function send(){
+async function sendAnswer(){
 
-let answer=document.getElementById("answer").value;
+const answer=document.getElementById("answer").value;
 
-let res=await fetch("/api/ai",{
+const res=await fetch("/api/ai",{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
 },
 body:JSON.stringify({answer})
-})
+});
 
-let data=await res.json()
+const data=await res.json();
 
 document.getElementById("result").innerHTML=
 
-"คะแนน: "+data.score+"/10 <br><br>"+data.feedback
+"Score: "+data.score+"/10 <br><br>"+data.feedback;
 
 }
 
