@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Convert Video</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#0f172a;
+color:white;
+text-align:center;
+padding:40px;
+}
+
+.card{
+background:#1e293b;
+padding:40px;
+border-radius:10px;
+max-width:600px;
+margin:auto;
+}
+
+input{
+margin-top:20px;
+}
+
+button{
+margin-top:20px;
+padding:15px 30px;
+background:#22c55e;
+border:none;
+border-radius:8px;
+color:white;
+font-size:18px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>Upload Video</h2>
+
+<input type="file" id="video">
+
+<br>
+
+<button onclick="uploadVideo()">Convert to MP3</button>
+
+<p id="status"></p>
+
+</div>
+
+<script>
+
+async function uploadVideo(){
+
+let file = document.getElementById("video").files[0]
+
+let formData = new FormData()
+formData.append("video",file)
+
+document.getElementById("status").innerText="Uploading..."
+
+await fetch("/api",{
+method:"POST",
+body:formData
+})
+
+document.getElementById("status").innerText="Conversion started"
+
+}
+
+</script>
+
+</body>
+
+</html>
