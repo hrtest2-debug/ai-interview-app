@@ -1,45 +1,173 @@
 <!DOCTYPE html>
 <html>
 <head>
-
-<title>Video to MP3 Converter</title>
+<meta charset="UTF-8">
+<title>Reaction Speed Challenge</title>
 
 <style>
 
 body{
 font-family:Arial;
-background:#0f172a;
+background:#111;
 color:white;
 text-align:center;
-padding:100px;
+padding:20px;
 }
 
-.button{
-background:#22c55e;
-padding:15px 30px;
-border-radius:10px;
-text-decoration:none;
+#gameBox{
+width:90%;
+max-width:400px;
+height:250px;
+margin:auto;
+border-radius:15px;
+background:#b91c1c;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:24px;
+cursor:pointer;
+transition:0.3s;
+}
+
+button{
+padding:12px 25px;
+border:none;
+border-radius:8px;
+background:#2563eb;
 color:white;
-font-size:20px;
+font-size:18px;
+margin-top:20px;
+}
+
+#result{
+margin-top:20px;
+font-size:22px;
+}
+
+#leaderboard{
+margin-top:30px;
+}
+
+li{
+margin:5px;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<h1>Video to MP3 Converter</h1>
+<h1>⚡ Reaction Speed</h1>
 
-<p>
-Convert any video to MP3 instantly
-</p>
+<div id="gameBox">Press Start</div>
 
-<br>
+<button onclick="startGame()">Start</button>
 
-<a class="button" href="/convert.html">
-Convert Video
-</a>
+<div id="result"></div>
+
+<h2>🏆 Leaderboard</h2>
+<ul id="leaderboard"></ul>
+
+<script>
+
+let startTime
+let ready=false
+
+const box=document.getElementById("gameBox")
+
+function startGame(){
+
+box.style.background="#b91c1c"
+box.innerHTML="Wait..."
+
+ready=false
+
+let delay=Math.random()*3000+2000
+
+setTimeout(()=>{
+
+box.style.background="#16a34a"
+box.innerHTML="CLICK!"
+
+startTime=Date.now()
+ready=true
+
+playSound()
+
+},delay)
+
+}
+
+box.onclick=()=>{
+
+if(!ready) return
+
+let reaction=Date.now()-startTime
+
+document.getElementById("result").innerHTML=
+"Your time: "+reaction+" ms"
+
+saveScore(reaction)
+
+ready=false
+
+box.innerHTML="Press Start"
+
+box.style.background="#b91c1c"
+
+}
+
+function playSound(){
+
+let audio=new Audio(
+"https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"
+)
+
+audio.play()
+
+}
+
+async function saveScore(score){
+
+let name=prompt("Your name")
+
+if(!name) return
+
+await fetch("/api/leaderboard",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({name,score})
+})
+
+loadLeaderboard()
+
+}
+
+async function loadLeaderboard(){
+
+let res=await fetch("/api/leaderboard")
+
+let data=await res.json()
+
+let board=document.getElementById("leaderboard")
+
+board.innerHTML=""
+
+data.forEach(s=>{
+
+let li=document.createElement("li")
+
+li.innerText=s.name+" - "+s.score+" ms"
+
+board.appendChild(li)
+
+})
+
+}
+
+loadLeaderboard()
+
+</script>
 
 </body>
 </html>
