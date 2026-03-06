@@ -129,52 +129,102 @@ button {
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-  const questions = [
-    "เล่าเกี่ยวกับตัวคุณ",
-    "ทำไมคุณถึงอยากทำงานที่นี่",
-    "จุดแข็งของคุณคืออะไร",
-    "คุณจัดการกับความกดดันอย่างไร",
-    "อีก 5 ปีคุณอยากเติบโตไปในทิศทางไหน"
-  ];
+const questions = {
 
-  const questionEl = document.getElementById("question");
-  const answerEl = document.getElementById("answer");
-  const resultEl = document.getElementById("result");
+beginner: [
+"เล่าเกี่ยวกับตัวคุณ",
+"จุดแข็งของคุณคืออะไร",
+"ทำไมถึงอยากทำงานที่นี่"
+],
 
-  function newQuestion() {
-    const randomIndex = Math.floor(Math.random() * questions.length);
-    questionEl.textContent = questions[randomIndex];
-    answerEl.value = "";
-    resultEl.innerHTML = "";
-  }
+intermediate: [
+"เล่าประสบการณ์ที่คุณต้องแก้ปัญหายาก",
+"คุณจัดการกับความกดดันอย่างไร",
+"เคยมีความขัดแย้งกับทีมไหม และแก้ยังไง"
+],
 
-  function evaluate() {
-    const answer = answerEl.value.trim();
+advanced: [
+"เล่าการตัดสินใจยากที่สุดในชีวิตการทำงานของคุณ",
+"ถ้าทีมของคุณทำโปรเจกต์ล้มเหลว คุณจะจัดการอย่างไร",
+"คุณจะสร้างผลกระทบเชิงกลยุทธ์ให้บริษัทได้อย่างไร",
+"เล่าเหตุการณ์ที่คุณต้องโน้มน้าวคนที่ไม่เห็นด้วยกับคุณ",
+"ถ้าคุณต้องนำทีมที่ไม่มีแรงจูงใจ คุณจะทำอย่างไร"
+]
 
-    if (answer.length < 20) {
-      resultEl.innerHTML = "คำตอบสั้นเกินไป กรุณาอธิบายเพิ่มเติม";
-      return;
-    }
+};
 
-    let score = 5;
+let currentLevel = "advanced";
 
-    if (answer.length > 60) score += 2;
-    if (answer.length > 120) score += 2;
-    if (answer.includes("พัฒนา") || answer.includes("เรียนรู้")) score += 1;
+const questionEl = document.getElementById("question");
+const answerEl = document.getElementById("answer");
+const resultEl = document.getElementById("result");
+const levelEl = document.getElementById("level");
 
-    if (score > 10) score = 10;
+function newQuestion() {
 
-    resultEl.innerHTML =
-      "<div class='score'>คะแนน: " + score + " / 10</div>" +
-      "<div>คำแนะนำ: เพิ่มตัวอย่างประสบการณ์จริงจะทำให้คำตอบแข็งแรงขึ้น</div>";
-  }
+const list = questions[currentLevel];
 
-  document.getElementById("newBtn").addEventListener("click", newQuestion);
-  document.getElementById("submitBtn").addEventListener("click", evaluate);
+const randomIndex = Math.floor(Math.random() * list.length);
 
-  newQuestion();
+questionEl.textContent = list[randomIndex];
+
+answerEl.value = "";
+resultEl.innerHTML = "";
+
+}
+
+function evaluate() {
+
+const answer = answerEl.value.trim();
+
+if (answer.length < 30) {
+resultEl.innerHTML = "คำตอบสั้นเกินไปสำหรับระดับนี้";
+return;
+}
+
+let score = 5;
+
+if (answer.length > 80) score += 2;
+if (answer.length > 150) score += 2;
+
+if (
+answer.includes("กลยุทธ์") ||
+answer.includes("วิเคราะห์") ||
+answer.includes("ผลกระทบ")
+) {
+score += 1;
+}
+
+if (score > 10) score = 10;
+
+resultEl.innerHTML =
+"<div class='score'>คะแนน: " + score + " / 10</div>" +
+"<div>Advanced feedback: ลองเพิ่มตัวอย่างสถานการณ์จริง</div>";
+
+}
+
+function changeLevel() {
+
+currentLevel = levelEl.value;
+
+newQuestion();
+
+}
+
+document.getElementById("newBtn").addEventListener("click", newQuestion);
+document.getElementById("submitBtn").addEventListener("click", evaluate);
+
+levelEl.addEventListener("change", changeLevel);
+
+newQuestion();
+
 });
 </script>
 
 </body>
 </html>
+<select id="level">
+<option value="beginner">Beginner</option>
+<option value="intermediate">Intermediate</option>
+<option value="advanced" selected>Advanced</option>
+</select>
